@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anon Bot Menu</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #1c1c1c; color: white; text-align: center; padding: 20px; }
+        .card { background: #2d2d2d; border-radius: 15px; padding: 20px; margin-bottom: 20px; cursor: pointer; border: 1px solid #444; transition: 0.3s; }
+        .card:hover { border-color: #0088cc; }
+        h3 { margin: 0 0 10px 0; color: #0088cc; }
+        p { font-size: 14px; color: #bbb; }
+    </style>
+</head>
+<body>
+    <h2>Выберите действие</h2>
+
+    <div class="card" onclick="send('anon_link')">
+        <h3>🔗 Анонимный вопрос</h3>
+        <p>Сгенерировать ссылку для приема анонимных сообщений</p>
+    </div>
+
+    <div class="card" onclick="send('group_chat')">
+        <h3>👥 Групповой чат</h3>
+        <p>Создать канал для общения (2/3/4 человека)</p>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Развернуть на весь экран
+
+        function send(action) {
+            // Отправляем данные боту
+            tg.sendData(action);
+            tg.close(); // Закрываем окно после выбора
+        }
+    </script>
+</body>
+</html>
+
