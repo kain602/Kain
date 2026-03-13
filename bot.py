@@ -7,7 +7,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 # Токен берем из настроек Koyeb
 TOKEN = os.getenv("BOT_TOKEN")
 # Твоя ссылка на GitHub Pages
-WEB_APP_URL = "https://kain602.github.io/Kain/" 
+WEB_APP_URL = "https://kain602.github.io/Kain/"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
