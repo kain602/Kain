@@ -5,38 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
-        h2 { margin-bottom: 30px; color: #0088cc; }
-        .card { background: #2c2c2c; width: 90%; max-width: 350px; padding: 20px; border-radius: 15px; margin-bottom: 20px; cursor: pointer; border: 1px solid #3d3d3d; transition: transform 0.2s, border-color 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .card:active { transform: scale(0.95); }
-        .card:hover { border-color: #0088cc; }
-        .card h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
-        .card p { margin: 0; font-size: 0.9rem; color: #aaaaaa; }
+        body { font-family: sans-serif; background-color: #1a1a1a; color: white; text-align: center; padding: 20px; }
+        .card { background: #2c2c2c; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #3d3d3d; cursor: pointer; }
+        .card:active { background: #3d3d3d; }
+        h3 { color: #0088cc; margin: 0; }
+        p { color: #aaa; font-size: 14px; }
     </style>
 </head>
 <body>
+    <p style="color: gray; font-size: 10px;">v.2.0 (Active)</p>
     <h2>Меню функций</h2>
 
-    <div class="card" onclick="sendData('anon_link')">
+    <div class="card" onclick="window.Telegram.WebApp.sendData('anon_link')">
         <h3>🔗 Анонимный вопрос</h3>
-        <p>Получить ссылку для анонимных сообщений в соцсети.</p>
+        <p>Нажми, чтобы получить ссылку</p>
     </div>
 
-    <div class="card" onclick="sendData('group_chat')">
+    <div class="card" onclick="window.Telegram.WebApp.sendData('group_chat')">
         <h3>👥 Групповой чат</h3>
-        <p>Создать канал для общения на 2, 3 или 4 человека.</p>
+        <p>Создать канал (2-4 чел)</p>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-
-        function sendData(action) {
-            tg.sendData(action); // Отправляет текст боту
-        }
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
     </script>
 </body>
 </html>
-
-
