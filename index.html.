@@ -5,30 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: sans-serif; background-color: #1a1a1a; color: white; text-align: center; padding: 20px; }
-        .card { background: #2c2c2c; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #3d3d3d; cursor: pointer; }
-        .card:active { background: #3d3d3d; }
-        h3 { color: #0088cc; margin: 0; }
-        p { color: #aaa; font-size: 14px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #1a1a1a; color: white; display: flex; flex-direction: column; align-items: center; padding: 20px; margin: 0; }
+        .version { font-size: 10px; color: #555; margin-bottom: 10px; }
+        h2 { margin-bottom: 25px; color: #0088cc; }
+        .card { background: #2c2c2c; width: 100%; max-width: 320px; padding: 20px; border-radius: 16px; margin-bottom: 15px; cursor: pointer; border: 1px solid #3d3d3d; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .card:active { transform: scale(0.98); background: #333333; }
+        .card h3 { margin: 0 0 8px 0; font-size: 1.1rem; color: #0088cc; }
+        .card p { margin: 0; font-size: 0.9rem; color: #aaaaaa; line-height: 1.4; }
     </style>
 </head>
 <body>
-    <p style="color: gray; font-size: 10px;">v.2.0 (Active)</p>
-    <h2>Меню функций</h2>
+    <div class="version">v.3.0.1 (Force Reload)</div>
+    <h2>Выберите действие</h2>
 
-    <div class="card" onclick="window.Telegram.WebApp.sendData('anon_link')">
+    <div class="card" onclick="sendData('anon_link')">
         <h3>🔗 Анонимный вопрос</h3>
-        <p>Нажми, чтобы получить ссылку</p>
+        <p>Получите ссылку, чтобы люди могли писать вам анонимно.</p>
     </div>
 
-    <div class="card" onclick="window.Telegram.WebApp.sendData('group_chat')">
+    <div class="card" onclick="sendData('group_chat')">
         <h3>👥 Групповой чат</h3>
-        <p>Создать канал (2-4 чел)</p>
+        <p>Создать закрытый канал для общения (2-4 человека).</p>
     </div>
 
     <script>
-        window.Telegram.WebApp.ready();
-        window.Telegram.WebApp.expand();
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        function sendData(action) {
+            tg.sendData(action);
+            tg.close();
+        }
     </script>
 </body>
 </html>
