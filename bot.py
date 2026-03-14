@@ -1,65 +1,74 @@
 import os
 import asyncio
-import logging
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import CommandStart
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 
-# Настройка логирования
-logging.basicConfig(level=logging.INFO)
-
+# Берем токен из переменных окружения (Koyeb)
 TOKEN = os.getenv("BOT_TOKEN")
-# Мы добавили ?v=999 в конец, чтобы сбросить кэш Телеграма
-WEB_APP_URL = "https://kain602.github.io/Kain/?v=999"
+# ВАЖНО: Добавлен параметр ?v=FINAL_TEST для обхода кэша
+WEB_APP_URL = "https://kain602.github.io/Kain/?v=FINAL_TEST"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# Хранилище связей: кто кому пишет анонимно
-user_connections = {}
+# База данных в памяти (кто кому пишет)
+anon_targets = {}
 
 @dp.message(CommandStart())
-async def start_command(message: types.Message):
+async def start(message: types.Message):
     args = message.text.split()
     
-    # Если зашли по ссылке /start 12345
+    # Если зашли через анонимную ссылку (например, /start 12345)
     if len(args) > 1:
         target_id = args[1]
-        user_connections[message.from_user.id] = target_id
-        await message.answer("🤫 Теперь ты можешь написать анонимное сообщение этому человеку.\nПросто отправь текст, фото или видео!")
+        anon_targets[message.from_user.id] = target_id
+        await message.answer("🤫 Ты в анонимном режиме. Напиши что угодно, и я передам это владельцу ссылки!")
     else:
-        # Обычный старт
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="🚀 Открыть меню", web_app=WebAppInfo(url=WEB_APP_URL))]
+        # Главное меню с Web App
+        markup = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🚀 Открыть меню функций", web_app=WebAppInfo(url=WEB_APP_URL))]
         ])
-        await message.answer("Добро пожаловать! Нажми на кнопку ниже, чтобы начать работу:", reply_markup=kb)
+        await message.answer("Привет! Я бот Kain. Нажми на кнопку, чтобы открыть меню:", reply_markup=markup)
 
 # Обработка выбора из Web App
 @dp.message(F.web_app_data)
-async def web_app_handler(message: types.Message):
-    choice = message.web_app_data.data
+async def handle_webapp_data(message: types.Message):
+    data = message.web_app_data.data
     
-    if choice == "anon_link":
-        bot_info = await bot.get_me()
-        link = f"https://t.me/{bot_info.username}?start={message.from_user.id}"
-        await message.answer(f"✅ Твоя личная ссылка для анонимных вопросов:\n\n`{link}`", parse_mode="Markdown")
+    if data == "anon_link":
+        me = await bot.get_me()
+        link = f"https://t.me/{me.username}?start={message.from_user.id}"
+        await message.answer(f"✅ Твоя личная анонимная ссылка:\n\n`{link}`\n\nРассылай её друзьям!", parse_mode="Markdown")
         
-    elif choice == "group_chat":
-        await message.answer("👥 Функция создания групповых чатов сейчас находится в разработке!")
+    elif data == "group_chat":
+        # Мини-меню для выбора количества людей
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="2 чел", callback_data="g2"),
+             InlineKeyboardButton(text="3 чел", callback_data="g3"),
+             InlineKeyboardButton(text="4 чел", callback_data="g4")]
+        ])
+        await message.answer("Выберите количество участников для анонимного канала:", reply_markup=kb)
 
-# Пересылка сообщений
+# Заглушка для группового чата
+@dp.callback_query(F.data.startswith("g"))
+async def group_callback(call: types.CallbackQuery):
+    await call.message.answer(f"⚙️ Функция создания канала на {call.data[1]} чел. в разработке!")
+    await call.answer()
+
+# Пересылка анонимных сообщений
 @dp.message()
-async def forward_messages(message: types.Message):
-    target = user_connections.get(message.from_user.id)
+async def forwarder(message: types.Message):
+    target = anon_targets.get(message.from_user.id)
     if target:
         try:
-            await bot.send_message(target, "📩 Пришло анонимное сообщение:")
-            await message.copy_to(chat_id=target)
-            await message.answer("✅ Отправлено!")
-        except Exception:
-            await message.answer("❌ Не удалось отправить. Возможно, пользователь заблокировал бота.")
+            await bot.send_message(target, "📩 Новое анонимное сообщение:")
+            await message.copy_to(target)
+            await message.answer("✅ Сообщение доставлено!")
+        except:
+            await message.answer("❌ Ошибка доставки.")
     else:
-        await message.answer("Чтобы получить свою ссылку, нажми на кнопку 'Открыть меню' в /start")
+        await message.answer("Используй /start для вызова меню.")
 
 async def main():
     await dp.start_polling(bot)
