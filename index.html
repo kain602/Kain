@@ -102,10 +102,11 @@
 
   <div class="card">
     <div class="video-wrapper">
+      <!-- Подключаем именно ваш love.mp4 -->
       <video id="myVideo" src="love.mp4" loop playsinline muted autoplay></video>
     </div>
 
-    <div class="text">я скучал)</div>
+    <div class="text">я скучал)❤</div>
     <div class="hint" id="hint">Нажми на экран, чтобы включить звук 🔊</div>
   </div>
 
@@ -114,6 +115,7 @@
     const hint = document.getElementById('hint');
     let soundEnabled = false;
 
+    // Включение звука и сердечек по нажатию в любое место экрана
     function handleScreenClick() {
       if (!soundEnabled) {
         video.muted = false;
@@ -124,6 +126,7 @@
         hint.style.color = "#ff3366";
         startHearts();
       } else {
+        // Повторный клик ставит на паузу / возобновляет
         if (video.paused) {
           video.play();
           hint.innerText = "Звук включён ✨";
@@ -136,6 +139,7 @@
 
     document.body.addEventListener('click', handleScreenClick);
 
+    // Генерация сердечек
     function spawnHeart() {
       const heart = document.createElement('div');
       heart.className = 'heart';
