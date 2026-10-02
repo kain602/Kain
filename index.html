@@ -2,12 +2,8 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>I Miss You</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-
   <style>
     * {
       box-sizing: border-box;
@@ -16,40 +12,36 @@
     }
 
     body {
-      background: radial-gradient(circle at center, #fff0f3 0%, #ffd6e0 100%);
+      background: radial-gradient(circle at center, #fff0f5 0%, #ffe4ec 100%);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-family: 'Montserrat', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
+      cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .container {
-      position: relative;
-      width: 90%;
-      max-width: 390px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* ЭТАП 1: Видео */
-    #card-video {
+    .card {
       background: #ffffff;
       padding: 20px;
       border-radius: 28px;
-      box-shadow: 0 16px 36px rgba(255, 90, 130, 0.2);
-      width: 100%;
+      box-shadow: 0 12px 30px rgba(255, 105, 135, 0.18);
+      max-width: 380px;
+      width: 88%;
       text-align: center;
-      transition: opacity 0.8s ease, transform 0.8s ease;
       position: relative;
       z-index: 10;
+      transition: transform 0.25s ease;
     }
 
-    .video-box {
-      position: relative;
+    .card:active {
+      transform: scale(0.98);
+    }
+
+    .video-wrapper {
       width: 100%;
       aspect-ratio: 1 / 1;
       border-radius: 20px;
@@ -64,251 +56,102 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      background: #fff;
+      display: block;
     }
 
-    /* Кнопка включения звука */
-    .play-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(2px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 5;
-    }
-
-    .play-btn {
-      width: 68px;
-      height: 68px;
-      background: #ff3366;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 25px rgba(255, 51, 102, 0.5);
-      color: white;
-      font-size: 28px;
-      animation: pulse 1.8s infinite;
-    }
-
-    .play-hint {
-      margin-top: 14px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #ffffff;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-      background: rgba(255, 51, 102, 0.85);
-      padding: 6px 14px;
-      border-radius: 20px;
-    }
-
-    .card-title {
-      margin-top: 15px;
+    .text {
+      margin-top: 16px;
       font-size: 1.25rem;
       font-weight: 600;
       color: #ff3366;
     }
 
-    /* ЭТАП 2: Открытка "я скучал жаным" */
-    #card-surprise {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.85);
-      width: 100%;
-      min-height: 360px;
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(14px);
-      border-radius: 30px;
-      box-shadow: 0 20px 45px rgba(230, 80, 120, 0.22);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 30px;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 20;
-    }
-
-    #card-surprise.active {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-      pointer-events: auto;
-    }
-
-    .sub-top {
+    .hint {
+      margin-top: 6px;
       font-size: 0.85rem;
-      letter-spacing: 2px;
-      color: #c77d94;
-      margin-bottom: 22px;
+      color: #888;
+      transition: all 0.3s ease;
     }
 
-    .heart-svg {
-      width: 75px;
-      height: 75px;
-      fill: url(#heart-grad);
-      filter: drop-shadow(0 10px 20px rgba(255, 50, 100, 0.4));
-      animation: heartbeat 1.6s ease-in-out infinite;
-      margin-bottom: 22px;
-    }
-
-    .main-text {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 2.2rem;
-      font-weight: 600;
-      background: linear-gradient(135deg, #d81b60, #ff4081, #c2185b);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .sub-bottom {
-      margin-top: 12px;
-      font-size: 0.78rem;
-      color: #b07286;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-    }
-
-    @keyframes heartbeat {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.14); }
-    }
-
-    .floating-item {
+    /* Анимация сердечек */
+    .heart {
       position: fixed;
       bottom: -30px;
+      user-select: none;
       pointer-events: none;
-      animation: flyUp 4.2s linear forwards;
+      animation: floatUp 3.2s linear forwards;
       z-index: 1;
     }
 
-    @keyframes flyUp {
+    @keyframes floatUp {
       0% {
         opacity: 0;
-        transform: translateY(0) scale(0.6) rotate(0deg);
+        transform: translateY(0) scale(0.6);
       }
-      20% { opacity: 0.85; }
+      20% {
+        opacity: 1;
+      }
       100% {
         opacity: 0;
-        transform: translateY(-110vh) scale(1.3) rotate(35deg);
+        transform: translateY(-110vh) scale(1.4) rotate(20deg);
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <!-- Этап 1: Видео -->
-    <div id="card-video">
-      <div class="video-box">
-        <video id="myVideo" playsinline webkit-playsinline preload="auto">
-          <source src="love.mp4" type="video/mp4" />
-        </video>
-
-        <!-- Кнопка со значком звука -->
-        <div class="play-overlay" id="playOverlay">
-          <div class="play-btn">🔊</div>
-          <div class="play-hint">Нажми для звука 🎵</div>
-        </div>
-      </div>
-      <div class="card-title">I Miss You ❤</div>
+  <div class="card">
+    <div class="video-wrapper">
+      <video id="myVideo" src="love.mp4" loop playsinline muted autoplay></video>
     </div>
 
-    <!-- Этап 2: Сюрприз -->
-    <div id="card-surprise">
-      <div class="sub-top">a little something, for you</div>
-
-      <svg class="heart-svg" viewBox="0 0 24 24">
-        <defs>
-          <linearGradient id="heart-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ff758c" />
-            <stop offset="100%" stop-color="#ff1a53" />
-          </linearGradient>
-        </defs>
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-      </svg>
-
-      <div class="main-text">я скучал жаным</div>
-      <div class="sub-bottom">make a wish…</div>
-    </div>
+    <div class="text">я скучал)</div>
+    <div class="hint" id="hint">Нажми на экран, чтобы включить звук 🔊</div>
   </div>
 
   <script>
     const video = document.getElementById('myVideo');
-    const playOverlay = document.getElementById('playOverlay');
-    const cardVideo = document.getElementById('card-video');
-    const cardSurprise = document.getElementById('card-surprise');
+    const hint = document.getElementById('hint');
+    let soundEnabled = false;
 
-    // Функция перехода ко второму этапу
-    let surpriseShown = false;
-    function showSurprise() {
-      if (surpriseShown) return;
-      surpriseShown = true;
-
-      cardVideo.style.opacity = '0';
-      cardVideo.style.transform = 'scale(0.85)';
-      
-      setTimeout(() => {
-        cardVideo.style.display = 'none';
-        cardSurprise.classList.add('active');
-        setInterval(spawnHeart, 350);
-      }, 700);
-    }
-
-    // Запуск со звуком
-    function startWithSound(e) {
-      if (e) e.stopPropagation();
-      
-      // Скрываем плашку
-      playOverlay.style.display = 'none';
-
-      // Включаем звук и запускаем воспроизведение
-      video.muted = false;
-      video.currentTime = 0;
-      
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          console.log("Ошибка автозапуска:", error);
-          // Если всё равно не дало со звуком — запускаем как есть
-          video.muted = true;
+    function handleScreenClick() {
+      if (!soundEnabled) {
+        video.muted = false;
+        video.currentTime = 0;
+        video.play();
+        soundEnabled = true;
+        hint.innerText = "Звук включён ✨";
+        hint.style.color = "#ff3366";
+        startHearts();
+      } else {
+        if (video.paused) {
           video.play();
-        });
+          hint.innerText = "Звук включён ✨";
+        } else {
+          video.pause();
+          hint.innerText = "Пауза ⏸️";
+        }
       }
-
-      // Слушаем окончание видео
-      video.addEventListener('ended', showSurprise);
     }
 
-    playOverlay.addEventListener('click', startWithSound);
-    playOverlay.addEventListener('touchend', startWithSound);
+    document.body.addEventListener('click', handleScreenClick);
 
-    // Летающие сердечки
     function spawnHeart() {
       const heart = document.createElement('div');
-      heart.className = 'floating-item';
-      const items = ['💖', '🌸', '✨', '💕', '❤️'];
-      heart.innerText = items[Math.floor(Math.random() * items.length)];
+      heart.className = 'heart';
+      const icons = ['❤️', '💖', '💕', '💗'];
+      heart.innerText = icons[Math.floor(Math.random() * icons.length)];
       heart.style.left = Math.random() * 92 + 'vw';
       heart.style.fontSize = Math.floor(Math.random() * 16 + 18) + 'px';
       document.body.appendChild(heart);
 
-      setTimeout(() => heart.remove(), 4200);
+      setTimeout(() => heart.remove(), 3200);
+    }
+
+    function startHearts() {
+      setInterval(spawnHeart, 350);
     }
   </script>
+
 </body>
 </html>
