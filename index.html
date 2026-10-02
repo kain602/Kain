@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>I Miss You</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+
   <style>
     * {
       box-sizing: border-box;
@@ -12,33 +16,39 @@
     }
 
     body {
-      background: radial-gradient(circle at center, #fff0f5 0%, #ffe4ec 100%);
+      background: radial-gradient(circle at center, #fff0f3 0%, #ffd6e0 100%);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Montserrat', sans-serif;
       overflow: hidden;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Первый экран: Видео */
+    #stage-video {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      transition: opacity 1.2s ease, transform 1.2s ease;
+      z-index: 10;
     }
 
     .card {
       background: #ffffff;
       padding: 20px;
       border-radius: 28px;
-      box-shadow: 0 12px 30px rgba(255, 105, 135, 0.18);
+      box-shadow: 0 15px 35px rgba(255, 90, 130, 0.18);
       max-width: 380px;
       width: 88%;
       text-align: center;
-      position: relative;
-      z-index: 10;
-      transition: transform 0.25s ease;
-    }
-
-    .card:active {
-      transform: scale(0.98);
     }
 
     .video-wrapper {
@@ -47,9 +57,6 @@
       border-radius: 20px;
       overflow: hidden;
       background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     video {
@@ -59,8 +66,8 @@
       display: block;
     }
 
-    .text {
-      margin-top: 16px;
+    .card-title {
+      margin-top: 15px;
       font-size: 1.25rem;
       font-weight: 600;
       color: #ff3366;
@@ -68,94 +75,218 @@
 
     .hint {
       margin-top: 6px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #888;
-      transition: all 0.3s ease;
     }
 
-    /* Анимация сердечек */
-    .heart {
+    /* Второй экран: Сюрприз после видео */
+    #stage-surprise {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 90%;
+      max-width: 440px;
+      height: 380px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 32px;
+      box-shadow: 0 20px 50px rgba(230, 80, 120, 0.18);
+      opacity: 0;
+      transform: scale(0.9);
+      pointer-events: none;
+      transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 5;
+      text-align: center;
+      padding: 30px;
+    }
+
+    #stage-surprise.show {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    .sub-top {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      color: #c77d94;
+      text-transform: lowercase;
+      margin-bottom: 25px;
+      opacity: 0;
+      animation: fadeIn 1.2s forwards 0.5s;
+    }
+
+    .heart-glow-container {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+
+    .heart-svg {
+      width: 75px;
+      height: 75px;
+      fill: url(#heart-grad);
+      filter: drop-shadow(0 10px 25px rgba(255, 50, 100, 0.45));
+      animation: heartbeat 1.8s ease-in-out infinite;
+    }
+
+    .main-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 2.3rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, #d81b60, #ff4081, #c2185b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: fadeInUp 1.4s forwards 1.2s;
+    }
+
+    .sub-bottom {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: #b07286;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeIn 1.2s forwards 1.8s;
+    }
+
+    /* Анимации */
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.12); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Летающие фоновые лепестки и сердечки */
+    .floating-item {
       position: fixed;
       bottom: -30px;
-      user-select: none;
       pointer-events: none;
-      animation: floatUp 3.2s linear forwards;
-      z-index: 1;
+      animation: flyUp 4s linear forwards;
+      z-index: 2;
     }
 
-    @keyframes floatUp {
+    @keyframes flyUp {
       0% {
         opacity: 0;
-        transform: translateY(0) scale(0.6);
+        transform: translateY(0) scale(0.6) rotate(0deg);
       }
-      20% {
-        opacity: 1;
-      }
+      20% { opacity: 0.9; }
       100% {
         opacity: 0;
-        transform: translateY(-110vh) scale(1.4) rotate(20deg);
+        transform: translateY(-110vh) scale(1.3) rotate(35deg);
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <div class="video-wrapper">
-      <!-- Подключаем именно ваш love.mp4 -->
-      <video id="myVideo" src="love.mp4" loop playsinline muted autoplay></video>
+  <!-- Этап 1: Видео -->
+  <div id="stage-video">
+    <div class="card">
+      <div class="video-wrapper">
+        <video id="myVideo" src="love.mp4" playsinline muted autoplay></video>
+      </div>
+      <div class="card-title">I Miss You ❤</div>
+      <div class="hint" id="hint">Коснись экрана, чтобы включить звук 🔊</div>
+    </div>
+  </div>
+
+  <!-- Этап 2: "Я скучал жаным" -->
+  <div id="stage-surprise">
+    <div class="sub-top">a little something, for you</div>
+
+    <div class="heart-glow-container">
+      <svg class="heart-svg" viewBox="0 0 24 24">
+        <defs>
+          <linearGradient id="heart-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff758c" />
+            <stop offset="100%" stop-color="#ff1a53" />
+          </linearGradient>
+        </defs>
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
     </div>
 
-    <div class="text">I Miss You ❤</div>
-    <div class="hint" id="hint">Нажми на экран, чтобы включить звук 🔊</div>
+    <div class="main-text">я скучал жаным</div>
+    <div class="sub-bottom">make a wish…</div>
   </div>
 
   <script>
     const video = document.getElementById('myVideo');
     const hint = document.getElementById('hint');
-    let soundEnabled = false;
+    const stageVideo = document.getElementById('stage-video');
+    const stageSurprise = document.getElementById('stage-surprise');
 
-    // Включение звука и сердечек по нажатию в любое место экрана
-    function handleScreenClick() {
-      if (!soundEnabled) {
+    let soundStarted = false;
+    let videoEnded = false;
+
+    // Включение звука при первом касании
+    function startWithSound() {
+      if (!soundStarted) {
         video.muted = false;
         video.currentTime = 0;
         video.play();
-        soundEnabled = true;
+        soundStarted = true;
         hint.innerText = "Звук включён ✨";
         hint.style.color = "#ff3366";
-        startHearts();
-      } else {
-        // Повторный клик ставит на паузу / возобновляет
-        if (video.paused) {
-          video.play();
-          hint.innerText = "Звук включён ✨";
-        } else {
-          video.pause();
-          hint.innerText = "Пауза ⏸️";
-        }
       }
     }
 
-    document.body.addEventListener('click', handleScreenClick);
+    document.body.addEventListener('click', startWithSound);
+    document.body.addEventListener('touchstart', startWithSound);
 
-    // Генерация сердечек
+    // Событие: когда видео закончилось
+    video.addEventListener('ended', () => {
+      videoEnded = true;
+
+      // Плавно прячем первое видео
+      stageVideo.style.opacity = '0';
+      stageVideo.style.transform = 'scale(0.85)';
+
+      setTimeout(() => {
+        stageVideo.style.display = 'none';
+
+        // Показываем открытку "я скучал жаным"
+        stageSurprise.classList.add('show');
+        
+        // Запускаем постоянный водопад сердечек
+        setInterval(spawnHeart, 300);
+      }, 1000);
+    });
+
+    // Летающие сердечки
     function spawnHeart() {
       const heart = document.createElement('div');
-      heart.className = 'heart';
-      const icons = ['❤️', '💖', '💕', '💗'];
-      heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+      heart.className = 'floating-item';
+      const symbols = ['💖', '🌸', '✨', '💕', '❤️'];
+      heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
       heart.style.left = Math.random() * 92 + 'vw';
       heart.style.fontSize = Math.floor(Math.random() * 16 + 18) + 'px';
       document.body.appendChild(heart);
 
-      setTimeout(() => heart.remove(), 3200);
-    }
-
-    function startHearts() {
-      setInterval(spawnHeart, 350);
+      setTimeout(() => heart.remove(), 4000);
     }
   </script>
-
 </body>
 </html>
