@@ -26,7 +26,6 @@
       padding: 16px;
     }
 
-    /* Экран 1: Конверт */
     .envelope-box {
       text-align: center;
       cursor: pointer;
@@ -49,7 +48,6 @@
       letter-spacing: 1px;
     }
 
-    /* Экран 2: Пиксельное окно */
     .letter-window {
       position: relative;
       width: 100%;
@@ -101,7 +99,6 @@
       justify-content: center;
       align-items: center;
       margin-bottom: 16px;
-      box-shadow: inset 0 0 10px rgba(255, 77, 109, 0.08);
     }
 
     .video-box video {
@@ -121,7 +118,6 @@
 </head>
 <body>
 
-  <!-- Нажатие на конверт позволяет обойти блокировку звука в Safari -->
   <div class="envelope-box" id="envelopeBox" onclick="openValentine()">
     <svg class="envelope-svg" viewBox="0 0 100 80">
       <rect x="5" y="15" width="90" height="60" rx="6" fill="#fff5f7" stroke="#ff4d6d" stroke-width="3.5" />
@@ -132,7 +128,6 @@
     <div class="envelope-label">&#9825; Открой меня &#9825;</div>
   </div>
 
-  <!-- Открывающаяся карточка с видео и музыкой -->
   <div class="letter-window" id="letterWindow">
     <div class="window-header">
       <span>F O R  Y O U</span>
@@ -146,6 +141,7 @@
 
     <div class="video-box">
       <video id="loveVideo" loop playsinline preload="auto">
+        <source src="love.mp4.MP4" type="video/mp4">
         <source src="love.mp4" type="video/mp4">
       </video>
     </div>
@@ -164,7 +160,6 @@
         win.classList.add('open');
       }, 20);
 
-      // Включаем видео со звуком сразу по клику
       const video = document.getElementById('loveVideo');
       if (video) {
         video.muted = false;
