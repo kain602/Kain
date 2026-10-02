@@ -1,174 +1,161 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>I Miss You</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Press Start 2P', monospace;
-      -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: #ffdce5;
-      background-image: radial-gradient(#ffb6c1 1.5px, transparent 1.5px);
-      background-size: 24px 24px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: radial-gradient(circle at center, #fff0f5 0%, #ffe4ec 100%);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
-      padding: 16px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .envelope-box {
+    .card {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 28px;
+      box-shadow: 0 12px 30px rgba(255, 105, 135, 0.18);
+      max-width: 380px;
+      width: 88%;
       text-align: center;
-      cursor: pointer;
+      position: relative;
+      z-index: 10;
       transition: transform 0.25s ease;
     }
 
-    .envelope-box:hover {
-      transform: scale(1.05);
+    .card:active {
+      transform: scale(0.98);
     }
 
-    .envelope-svg {
-      width: 170px;
-      filter: drop-shadow(0 10px 15px rgba(235, 110, 130, 0.35));
-    }
-
-    .envelope-label {
-      margin-top: 18px;
-      color: #df405a;
-      font-size: 13px;
-      letter-spacing: 1px;
-    }
-
-    .letter-window {
-      position: relative;
-      width: 100%;
-      max-width: 360px;
-      background: #ffffff;
-      border: 4px solid #ff4d6d;
-      box-shadow: 8px 8px 0px #ff9ebb;
-      padding: 18px;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      opacity: 0;
-      transform: scale(0.7);
-      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .letter-window.open {
-      display: flex;
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .window-header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 3px dashed #ff9ebb;
-      padding-bottom: 10px;
-      margin-bottom: 16px;
-      color: #ff4d6d;
-      font-size: 11px;
-    }
-
-    .header-icons {
-      display: flex;
-      gap: 6px;
-      font-size: 11px;
-    }
-
-    .video-box {
+    .video-wrapper {
       width: 100%;
       aspect-ratio: 1 / 1;
-      border-radius: 12px;
+      border-radius: 20px;
       overflow: hidden;
-      border: 2px solid #ffb6c1;
-      background: #ffffff;
+      background: #fff;
       display: flex;
-      justify-content: center;
       align-items: center;
-      margin-bottom: 16px;
+      justify-content: center;
     }
 
-    .video-box video {
+    video {
       width: 100%;
       height: 100%;
       object-fit: contain;
       display: block;
     }
 
-    .footer-text {
-      color: #ff4d6d;
-      font-size: 12px;
-      line-height: 1.6;
-      text-align: center;
+    .text {
+      margin-top: 16px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ff3366;
+    }
+
+    .hint {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: #888;
+      transition: all 0.3s ease;
+    }
+
+    /* Анимация сердечек */
+    .heart {
+      position: fixed;
+      bottom: -30px;
+      user-select: none;
+      pointer-events: none;
+      animation: floatUp 3.2s linear forwards;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.6);
+      }
+      20% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-110vh) scale(1.4) rotate(20deg);
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="envelope-box" id="envelopeBox" onclick="openValentine()">
-    <svg class="envelope-svg" viewBox="0 0 100 80">
-      <rect x="5" y="15" width="90" height="60" rx="6" fill="#fff5f7" stroke="#ff4d6d" stroke-width="3.5" />
-      <polygon points="5,18 50,52 95,18" fill="#ffe3ea" stroke="#ff4d6d" stroke-width="3" />
-      <circle cx="50" cy="45" r="7" fill="#ff4d6d" />
-      <path d="M47 43 a2 2 0 0 1 3 0 a2 2 0 0 1 3 0 c0 3 -3 4.5 -3 4.5 s-3 -1.5 -3 -4.5 z" fill="#ffffff" />
-    </svg>
-    <div class="envelope-label">&#9825; Открой меня &#9825;</div>
-  </div>
-
-  <div class="letter-window" id="letterWindow">
-    <div class="window-header">
-      <span>F O R  Y O U</span>
-      <div class="header-icons">
-        <span>&#9829;</span>
-        <span>-</span>
-        <span>&#9633;</span>
-        <span>&times;</span>
-      </div>
+  <div class="card">
+    <div class="video-wrapper">
+      <!-- Подключаем именно ваш love.mp4 -->
+      <video id="myVideo" src="love.mp4" loop playsinline muted autoplay></video>
     </div>
 
-    <div class="video-box">
-      <video id="loveVideo" loop playsinline preload="auto">
-        <source src="love.mp4.MP4" type="video/mp4">
-        <source src="love.mp4" type="video/mp4">
-      </video>
-    </div>
-
-    <div class="footer-text">
-      Я скучаю по тебе ❤️
-    </div>
+    <div class="text">I Miss You ❤</div>
+    <div class="hint" id="hint">Нажми на экран, чтобы включить звук 🔊</div>
   </div>
 
   <script>
-    function openValentine() {
-      document.getElementById('envelopeBox').style.display = 'none';
-      const win = document.getElementById('letterWindow');
-      win.style.display = 'flex';
-      setTimeout(() => {
-        win.classList.add('open');
-      }, 20);
+    const video = document.getElementById('myVideo');
+    const hint = document.getElementById('hint');
+    let soundEnabled = false;
 
-      const video = document.getElementById('loveVideo');
-      if (video) {
+    // Включение звука и сердечек по нажатию в любое место экрана
+    function handleScreenClick() {
+      if (!soundEnabled) {
         video.muted = false;
-        video.play().catch(() => {
-          video.muted = true;
+        video.currentTime = 0;
+        video.play();
+        soundEnabled = true;
+        hint.innerText = "Звук включён ✨";
+        hint.style.color = "#ff3366";
+        startHearts();
+      } else {
+        // Повторный клик ставит на паузу / возобновляет
+        if (video.paused) {
           video.play();
-        });
+          hint.innerText = "Звук включён ✨";
+        } else {
+          video.pause();
+          hint.innerText = "Пауза ⏸️";
+        }
       }
     }
+
+    document.body.addEventListener('click', handleScreenClick);
+
+    // Генерация сердечек
+    function spawnHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      const icons = ['❤️', '💖', '💕', '💗'];
+      heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+      heart.style.left = Math.random() * 92 + 'vw';
+      heart.style.fontSize = Math.floor(Math.random() * 16 + 18) + 'px';
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 3200);
+    }
+
+    function startHearts() {
+      setInterval(spawnHeart, 350);
+    }
   </script>
+
 </body>
 </html>
